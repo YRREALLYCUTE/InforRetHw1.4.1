@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mypro.dao.ProductDetailsDao">
+
+   <select id="getGoodByGoodId" parameterType="String" resultType="com.mypro.domain.Good">
+       select *
+       from goods
+       where goodId = #{goodId}
+   </select>
+
+    <resultMap id="ProductDetailsResultMap" type="com.mypro.domain.ProductDetails" autoMapping="true">
+
+        <association property="good" column="goodId" select="getGoodByGoodId"></association>
+
+    </resultMap>
+
+    <select id="findById" parameterType="Integer" resultMap="ProductDetailsResultMap">
+		select *
+		from product_details
+		where id = #{id}
+	</select>
+
+    <select id="findAll" resultMap="ProductDetailsResultMap">
+		select *
+		from product_details
+	</select>
+
+    <select id="findByConditions" resultMap="ProductDetailsResultMap">
+		select *
+		from product_details
+		where userId = #{userId}
+	</select>
+
+    <select id="findAllCpu" resultMap="ProductDetailsResultMap">
+      select cpu
+      from product_details
+      group by cpu
+    </select>
+
+    <select id="findAllType" resultMap="ProductDetailsResultMap">
+        select productType
+        from product_details
+        group by productType
+    </select>
+
+    <select id="findAllPosition" resultMap="ProductDetailsResultMap">
+        select productPosition
+        from product_details
+        group by productPosition
+    </select>
+
+    <select id="findAllBrand" parameterType="String" resultMap="ProductDetailsResultMap">
+        select brand
+        from product_details
+        group by brand
+    </select>
+</mapper>

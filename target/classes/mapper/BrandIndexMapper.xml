@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mypro.dao.BrandIndexDao">
+
+    <select id="selectGoodById" resultType="com.mypro.domain.Good">
+        select *
+        from goods
+        where id = #{id}
+    </select>
+
+
+    <resultMap id="ProductDetailsResultMap" type="com.mypro.domain.ProductDetails" autoMapping="true">
+
+        <association property="good" column="id" select="selectGoodById"></association>
+
+    </resultMap>
+
+    <select id="selectProductByProId" resultMap="ProductDetailsResultMap">
+        select *
+        from product_details
+        where id = #{id}
+    </select>
+
+    <resultMap id="BrandResultMap" type="com.mypro.domain.BrandIndex" autoMapping="true">
+
+        <association property="productDetails" column="id" select="selectProductByProId"></association>
+
+    </resultMap>
+
+    <select id="findByFiled" parameterType="String" resultMap="BrandResultMap">
+		select *
+		from brand_index
+		where filed = #{filed}
+	</select>
+
+
+    <update id="updateBrandIndex">
+        update brand_index
+        set id = #{productDetails.id}, filed = #{filed}, frequence = #{frequence}
+        where id = #{productDetails.id} and filed = #{filed}
+    </update>
+
+    <insert id="insertBrandIndex" parameterType="com.mypro.domain.BrandIndex">
+        insert into brand_index values (#{productDetails.id},#{filed},#{frequence})
+    </insert>
+
+    <select id="findByFiledAndId" resultMap="BrandResultMap">
+        select *
+        from brand_index
+        where filed = #{filed} and id = #{id}
+    </select>
+</mapper>
